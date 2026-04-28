@@ -776,60 +776,73 @@ _\\\__/   \    /          _\\\__/    \    /
 </footer>
 
 <script>
-  async function loadGitHub() {
-    const statsEl = document.getElementById('gh-profile-stats');
-    const reposEl = document.getElementById('gh-repos-list');
+  document.addEventListener('DOMContentLoaded', () => {
+    async function loadGitHub() {
+      const statsEl = document.getElementById('gh-profile-stats');
+      const reposEl = document.getElementById('gh-repos-list');
 
-    try {
-      const [userRes, reposRes] = await Promise.all([
-        fetch('https://api.github.com/users/nonQualities'),
-        fetch('https://api.github.com/users/nonQualities/repos?sort=updated&per_page=10')
-      ]);
-
-      if (!userRes.ok || !reposRes.ok) throw new Error('API error');
-
-      const user = await userRes.json();
-      const repos = await reposRes.json();
-
-      // Profile stats
-      statsEl.innerHTML = `
-        <div class="gh-row">
-          <span class="gh-key">Entity</span>
-          <span class="gh-val">@${user.login}</span>
-        </div>
-        <div class="gh-row">
-          <span class="gh-key">Public Repos</span>
-          <span class="gh-val">${user.public_repos}</span>
-        </div>
-        <div class="gh-row">
-          <span class="gh-key">Followers</span>
-          <span class="gh-val">${user.followers}</span>
-        </div>
-      `;
-
-      // Repo list
-      if (repos.length > 0) {
-        const publicRepos = repos.filter(r => !r.fork);
-        reposEl.innerHTML = '<div style="font-size:10px; color:var(--muted); text-transform:uppercase; letter-spacing:2px; margin: 24px 0 12px; border-bottom: 1px dotted var(--border); padding-bottom: 4px;">Recent Transmissions</div>' +
-          publicRepos.slice(0, 5).map(r => `
-            <div class="gh-repo">
-              <span class="gh-repo-name">
-                <a href="${r.html_url}" target="_blank">${r.name}</a>
-              </span>
-              <span class="gh-repo-meta">${r.language || '—'} · ★ ${r.stargazers_count}</span>
-            </div>
-          `).join('');
+      // Constructive addition: Guard clause to prevent execution if elements are missing
+      if (!statsEl || !reposEl) {
+        console.warn('GitHub stats DOM elements not found.');
+        return;
       }
 
-    } catch (e) {
-      statsEl.innerHTML = `<span style="font-size:12px; color:var(--muted);">
-        Could not establish connection to GitHub API. <br>
-        <a href="https://github.com/nonQualities" target="_blank" style="margin-top: 8px; display: inline-block;">→ override & visit profile manually</a>
-      </span>`;
-    }
-  }
+      try {
+        const [userRes, reposRes] = await Promise.all([
+          fetch('https://api.github.com/users/nonQualities'),
+          fetch('https://api.github.com/users/nonQualities/repos?sort=updated&per_page=10')
+        ]);
 
-  loadGitHub();
+        if (!userRes.ok || !reposRes.ok) {
+            // Check specifically for rate limiting (HTTP 403)
+            if (userRes.status === 403) {
+                throw new Error('GitHub API Rate Limit Exceeded');
+            }
+            throw new Error('API connection failed');
+        }
+
+        const user = await userRes.json();
+        const repos = await reposRes.json();
+
+        statsEl.innerHTML = `
+          <div class="gh-row">
+            <span class="gh-key">Entity</span>
+            <span class="gh-val">@${user.login}</span>
+          </div>
+          <div class="gh-row">
+            <span class="gh-key">Public Repos</span>
+            <span class="gh-val">${user.public_repos}</span>
+          </div>
+          <div class="gh-row">
+            <span class="gh-key">Followers</span>
+            <span class="gh-val">${user.followers}</span>
+          </div>
+        `;
+
+        if (repos.length > 0) {
+          const publicRepos = repos.filter(r => !r.fork);
+          reposEl.innerHTML = '<div style="font-size:10px; color:var(--muted); text-transform:uppercase; letter-spacing:2px; margin: 24px 0 12px; border-bottom: 1px dotted var(--border); padding-bottom: 4px;">Recent Transmissions</div>' +
+            publicRepos.slice(0, 5).map(r => `
+              <div class="gh-repo">
+                <span class="gh-repo-name">
+                  <a href="${r.html_url}" target="_blank">${r.name}</a>
+                </span>
+                <span class="gh-repo-meta">${r.language || '—'} · ★ ${r.stargazers_count}</span>
+              </div>
+            `).join('');
+        }
+
+      } catch (e) {
+        console.error("Transmission Interrupted: ", e.message);
+        statsEl.innerHTML = `<span style="font-size:12px; color:var(--muted);">
+          Could not establish connection to GitHub API. (${e.message})<br>
+          <a href="https://github.com/nonQualities" target="_blank" style="margin-top: 8px; display: inline-block;">→ override & visit profile manually</a>
+        </span>`;
+      }
+    }
+
+    loadGitHub();
+  });
 </script>
 
 </body>
