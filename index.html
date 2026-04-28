@@ -3,1165 +3,524 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>RFC 0001 — Ronit Choudhury: Personal Specification</title>
+<title>Ronit Choudhury</title>
 <style>
   :root {
-    --bg: #ffffff;
-    --text: #1a1a1a;
-    --accent: #ad463b;
-    --muted: #555;
-    --border: #1a1a1a;
+    --bg: #fafaf8;
+    --text: #1c1c1a;
+    --muted: #6b6b65;
+    --accent: #b84c3a;
+    --border: #d4d4ce;
     --mono: 'Courier New', Courier, monospace;
+    --sans: Georgia, 'Times New Roman', serif;
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
-
-  html { scroll-behavior: smooth; }
 
   body {
     background: var(--bg);
     color: var(--text);
     font-family: var(--mono);
     font-size: 14px;
-    line-height: 1.6;
-    max-width: 780px;
+    line-height: 1.7;
+    max-width: 680px;
     margin: 0 auto;
-    padding: 40px 24px 80px;
+    padding: 60px 24px 100px;
   }
 
-  /* ── ANIMATIONS ───────────────────────────── */
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
 
-  @keyframes blink {
-    0%, 100% { opacity: 1; }
-    50%       { opacity: 0; }
+  /* ── HEADER ── */
+  header {
+    margin-bottom: 56px;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 32px;
   }
 
-  @keyframes typeIn {
-    from { width: 0; }
-    to   { width: 100%; }
+  .name {
+    font-size: 22px;
+    font-weight: normal;
+    letter-spacing: 0.5px;
+    margin-bottom: 4px;
   }
 
-  @keyframes fadeSlide {
-    from { opacity: 0; transform: translateY(8px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
-
-  @keyframes scanline {
-    0%   { top: -4px; }
-    100% { top: 100%; }
-  }
-
-  @keyframes marqueeScroll {
-    from { transform: translateX(0); }
-    to   { transform: translateX(-50%); }
-  }
-
-  @keyframes dash {
-    to { stroke-dashoffset: 0; }
-  }
-
-  /* ── CURSOR ──────────────────────────────── */
-  .cursor {
-    display: inline-block;
-    width: 9px;
-    height: 1em;
-    background: var(--accent);
-    vertical-align: text-bottom;
-    animation: blink 1s step-end infinite;
-    margin-left: 2px;
-  }
-
-  /* ── TOP HEADER ──────────────────────────── */
-  .rfc-header {
-    border-top: 2px solid var(--border);
-    border-bottom: 2px solid var(--border);
-    padding: 12px 0;
-    margin-bottom: 32px;
-    animation: fadeSlide .6s ease both;
-  }
-
-  .rfc-header-grid {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    flex-wrap: wrap;
-    gap: 8px;
-  }
-
-  .rfc-header .left, .rfc-header .right {
+  .tagline {
     font-size: 12px;
-    line-height: 1.8;
+    color: var(--muted);
+    letter-spacing: 2px;
   }
 
-  .rfc-header .right { text-align: right; }
-
-  /* ── ASCII HERO ──────────────────────────── */
-  .ascii-hero {
-    text-align: center;
-    margin: 32px 0;
-    position: relative;
-    overflow: hidden;
-    animation: fadeSlide .8s ease .2s both;
+  /* ── SECTIONS ── */
+  section {
+    margin-bottom: 56px;
   }
 
-  .ascii-hero pre {
+  h2 {
     font-size: 11px;
-    line-height: 1.2;
-    display: inline-block;
-    text-align: left;
-    color: var(--text);
-    user-select: none;
-  }
-
-  .ascii-hero .accent-line {
-    color: var(--accent);
-    font-weight: bold;
-  }
-
-  /* scanline overlay */
-  .ascii-hero::after {
-    content: '';
-    position: absolute;
-    left: 0; right: 0;
-    height: 3px;
-    background: rgba(192,57,43,0.15);
-    animation: scanline 4s linear infinite;
-    pointer-events: none;
-  }
-
-  /* ── RFC TITLE BLOCK ─────────────────────── */
-  .rfc-title-block {
-    border: 1px solid var(--border);
-    padding: 20px 24px;
-    margin: 32px 0;
-    animation: fadeSlide .8s ease .3s both;
-  }
-
-  .rfc-number {
-    font-size: 11px;
-    color: var(--accent);
     letter-spacing: 3px;
     text-transform: uppercase;
-    margin-bottom: 6px;
-  }
-
-  .rfc-title-block h1 {
-    font-size: 18px;
-    font-weight: bold;
-    letter-spacing: 1px;
-    margin-bottom: 16px;
-    border-bottom: 1px dashed var(--border);
-    padding-bottom: 12px;
-  }
-
-  .rfc-meta {
-    display: grid;
-    grid-template-columns: 160px 1fr;
-    gap: 4px 0;
-    font-size: 12px;
-  }
-
-  .rfc-meta .key { color: var(--muted); }
-  .rfc-meta .val { color: var(--text); }
-  .rfc-meta .val a { color: var(--accent); text-decoration: none; }
-  .rfc-meta .val a:hover { text-decoration: underline; }
-
-  /* ── TABLE OF CONTENTS ───────────────────── */
-  .toc {
-    margin: 28px 0;
-    animation: fadeSlide .8s ease .4s both;
-  }
-
-  .toc-title {
-    font-size: 11px;
-    letter-spacing: 3px;
-    color: var(--accent);
-    margin-bottom: 10px;
-  }
-
-  .toc ol {
-    list-style: none;
-    padding: 0;
-  }
-
-  .toc li {
-    display: flex;
-    align-items: baseline;
-    gap: 0;
-    margin: 3px 0;
-    font-size: 13px;
-  }
-
-  .toc li .toc-num {
-    min-width: 36px;
     color: var(--muted);
-  }
-
-  .toc li .toc-dots {
-    flex: 1;
-    border-bottom: 1px dotted var(--muted);
-    margin: 0 6px;
-    margin-bottom: 3px;
-  }
-
-  .toc li .toc-page { color: var(--muted); font-size: 12px; }
-
-  .toc a { color: var(--text); text-decoration: none; }
-  .toc a:hover { color: var(--accent); }
-
-  /* ── SECTION HEADING ─────────────────────── */
-  .section {
-    margin: 48px 0 24px;
-    animation: fadeSlide .6s ease both;
-  }
-
-  .section-label {
-    font-size: 11px;
-    letter-spacing: 3px;
-    color: var(--accent);
-    margin-bottom: 4px;
-  }
-
-  .section h2 {
-    font-size: 15px;
-    font-weight: bold;
-    letter-spacing: 1px;
-    border-bottom: 1px solid var(--border);
-    padding-bottom: 6px;
     margin-bottom: 20px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
   }
 
-  /* ── SUBSECTION ──────────────────────────── */
-  .subsection {
-    margin: 24px 0;
-    padding-left: 20px;
-    border-left: 2px solid var(--text);
-  }
-
-  .subsection h3 {
-    font-size: 13px;
-    font-weight: bold;
-    margin-bottom: 8px;
-  }
-
-  .subsection p, .subsection ul, .subsection li {
+  p {
     font-size: 13px;
     color: var(--text);
-    margin-bottom: 4px;
-  }
-
-  .subsection ul { padding-left: 16px; }
-
-  /* ── FIELD TABLE ─────────────────────────── */
-  .field-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 16px 0;
-    font-size: 12px;
-  }
-
-  .field-table td {
-    padding: 5px 10px;
-    vertical-align: top;
-  }
-
-  .field-table tr {
-    border-bottom: 1px dotted #aaa;
-  }
-
-  .field-table .field-key {
-    color: var(--muted);
-    width: 160px;
-    white-space: nowrap;
-  }
-
-  .field-table a { color: var(--accent); text-decoration: none; }
-  .field-table a:hover { text-decoration: underline; }
-
-  /* ── TAG PILLS ───────────────────────────── */
-  .tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-    margin: 10px 0;
-  }
-
-  .tag {
-    border: 1px solid var(--border);
-    padding: 2px 8px;
-    font-size: 11px;
-    letter-spacing: .5px;
-    transition: background .15s, color .15s;
-  }
-
-  .tag:hover { background: var(--text); color: var(--bg); cursor: default; }
-
-  .tag.accent { border-color: var(--accent); color: var(--accent); }
-
-  /* ── PROJECT BLOCK ───────────────────────── */
-  .project-block {
-    border: 1px solid var(--border);
-    padding: 18px 20px;
-    margin: 20px 0;
-    position: relative;
-    transition: box-shadow .2s;
-  }
-
-  .project-block:hover {
-    box-shadow: 4px 4px 0 var(--border);
-  }
-
-  .project-num {
-    position: absolute;
-    top: 10px; right: 14px;
-    font-size: 11px;
-    color: var(--muted);
-    letter-spacing: 2px;
-  }
-
-  .project-block h3 {
-    font-size: 14px;
-    font-weight: bold;
-    margin-bottom: 4px;
-  }
-
-  .project-block .subtitle {
-    font-size: 11px;
-    color: var(--muted);
-    letter-spacing: 2px;
     margin-bottom: 12px;
   }
 
-  .project-block p { font-size: 12px; margin-bottom: 10px; }
-
-  .project-block a {
-    font-size: 12px;
-    color: var(--accent);
-    text-decoration: none;
-    border-bottom: 1px dotted var(--accent);
-  }
-
-  .project-block a:hover { text-decoration: none; border-bottom-style: solid; }
-
-  /* ── STATUS BADGE ────────────────────────── */
-  .status-badge {
-    display: inline-block;
-    font-size: 10px;
-    letter-spacing: 2px;
-    padding: 1px 6px;
-    border: 1px solid var(--accent);
-    color: var(--accent);
-    margin-bottom: 8px;
-  }
-
-  /* ── TERMINAL BLOCK ──────────────────────── */
-  .terminal {
-    background: var(--text);
-    color: var(--bg);
-    padding: 16px 20px;
-    margin: 20px 0;
-    font-size: 12px;
-    line-height: 1.9;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .terminal .prompt { color: var(--accent); }
-
-  .terminal::before {
-    content: '● ● ●';
-    position: absolute;
-    top: 6px; left: 14px;
-    font-size: 10px;
-    color: #666;
-    letter-spacing: 4px;
-  }
-
-  .terminal .body { margin-top: 14px; }
-
-  /* ── GRID ────────────────────────────────── */
-  .two-col {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 0 32px;
-  }
-
-  @media (max-width: 560px) {
-    .two-col { grid-template-columns: 1fr; }
-    .rfc-header-grid { flex-direction: column; }
-    .rfc-header .right { text-align: left; }
-  }
-
-  /* ── MARQUEE TICKER ──────────────────────── */
-  .ticker {
-    overflow: hidden;
-    border-top: 1px solid var(--border);
-    border-bottom: 1px solid var(--border);
-    padding: 7px 0;
-    margin: 32px 0;
-    white-space: nowrap;
+  /* ── ASCII ── */
+  .ascii {
+    font-size: 11px;
+    color: var(--muted);
+    line-height: 1.3;
+    margin: 16px 0;
     user-select: none;
   }
 
-  .ticker-inner {
-    display: inline-block;
-    animation: marqueeScroll 28s linear infinite;
+  /* ── STACK ── */
+  .stack-group {
+    margin-bottom: 18px;
   }
 
-  .ticker-inner span {
+  .stack-label {
     font-size: 11px;
-    letter-spacing: 2px;
     color: var(--muted);
-    margin: 0 18px;
+    letter-spacing: 1.5px;
+    margin-bottom: 6px;
   }
 
-  .ticker-inner .red { color: var(--accent); }
-
-  /* ── HORIZONTAL RULE ─────────────────────── */
-  .rule {
-    border: none;
-    border-top: 1px dashed var(--muted);
-    margin: 32px 0;
-  }
-
-  /* ── CONTACT BLOCK ───────────────────────── */
-  .contact-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 12px;
-    margin: 16px 0;
-  }
-
-  @media (max-width: 480px) {
-    .contact-grid { grid-template-columns: 1fr; }
-  }
-
-  .contact-item {
-    border: 1px solid var(--border);
-    padding: 12px 14px;
-    text-decoration: none;
+  .stack-items {
+    font-size: 13px;
     color: var(--text);
-    display: block;
-    transition: background .15s, color .15s;
+  }
+
+  /* ── PROJECTS ── */
+  .project {
+    margin-bottom: 28px;
+    padding-bottom: 28px;
+    border-bottom: 1px dotted var(--border);
+  }
+
+  .project:last-child {
+    border-bottom: none;
+  }
+
+  .project-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 6px;
+    gap: 12px;
+  }
+
+  .project-name {
+    font-size: 14px;
+    font-weight: bold;
+  }
+
+  .project-lang {
+    font-size: 11px;
+    color: var(--muted);
+    white-space: nowrap;
+  }
+
+  .project-desc {
+    font-size: 12px;
+    color: var(--muted);
+    margin-bottom: 6px;
+  }
+
+  .project-link {
+    font-size: 11px;
+  }
+
+  /* ── GITHUB STATS ── */
+  .gh-block {
+    background: #f0f0ec;
+    border: 1px solid var(--border);
+    padding: 18px 20px;
     font-size: 12px;
   }
 
-  .contact-item:hover {
-    background: var(--text);
-    color: var(--bg);
+  .gh-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 4px 0;
+    border-bottom: 1px dotted var(--border);
   }
 
-  .contact-item:hover .contact-arrow { color: var(--accent); }
+  .gh-row:last-child { border-bottom: none; }
 
-  .contact-item .contact-type {
-    font-size: 10px;
-    letter-spacing: 2px;
+  .gh-key { color: var(--muted); }
+  .gh-val { color: var(--text); }
+
+  #gh-repos-list {
+    margin-top: 16px;
+  }
+
+  .gh-repo {
+    padding: 10px 0;
+    border-bottom: 1px dotted var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+  }
+
+  .gh-repo:last-child { border-bottom: none; }
+
+  .gh-repo-name { font-size: 13px; }
+  .gh-repo-meta { font-size: 11px; color: var(--muted); }
+
+  /* ── READING ── */
+  .book {
+    padding: 10px 0;
+    border-bottom: 1px dotted var(--border);
+    font-size: 13px;
+  }
+
+  .book:last-child { border-bottom: none; }
+
+  .book-title { color: var(--text); }
+  .book-author { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+  /* ── BLOGS ── */
+  .blog-post {
+    padding: 12px 0;
+    border-bottom: 1px dotted var(--border);
+  }
+
+  .blog-post:last-child { border-bottom: none; }
+
+  .blog-title { font-size: 13px; color: var(--text); }
+  .blog-meta { font-size: 11px; color: var(--muted); margin-top: 3px; }
+
+  /* ── CONTACT ── */
+  .contact-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 8px;
+    font-size: 13px;
+  }
+
+  .contact-type {
     color: var(--muted);
-    display: block;
-    margin-bottom: 4px;
+    font-size: 11px;
+    width: 90px;
+    padding-top: 1px;
   }
 
-  .contact-item:hover .contact-type { color: #aaa; }
-
-  .contact-arrow { float: right; color: var(--accent); }
-
-  /* ── FOOTER ──────────────────────────────── */
-  .rfc-footer {
+  /* ── FOOTER ── */
+  footer {
     margin-top: 60px;
-    border-top: 2px solid var(--border);
+    border-top: 1px solid var(--border);
     padding-top: 16px;
     font-size: 11px;
     color: var(--muted);
-    display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 8px;
   }
 
-  .rfc-footer a { color: var(--accent); text-decoration: none; }
-  .rfc-footer a:hover { text-decoration: underline; }
-
-  /* ── STAGGERED SECTION ANIMATIONS ───────── */
-  .section:nth-child(1)  { animation-delay: .1s; }
-  .section:nth-child(2)  { animation-delay: .2s; }
-  .section:nth-child(3)  { animation-delay: .3s; }
-  .section:nth-child(4)  { animation-delay: .4s; }
-  .section:nth-child(5)  { animation-delay: .5s; }
-  .section:nth-child(6)  { animation-delay: .6s; }
+  /* loading state */
+  .loading { color: var(--muted); font-size: 12px; font-style: italic; }
 </style>
 </head>
 <body>
 
-<!-- ════════════════════════════════════════════
-     RFC TOP HEADER
-═══════════════════════════════════════════════ -->
-<div class="rfc-header">
-  <div class="rfc-header-grid">
-    <div class="left">
-      Personal Portfolio Working Group<br>
-      Request for Comments: 0001<br>
-      Category: Individual Specification<br>
-      ISSN: N/A
-    </div>
-    <div class="right">
-      R. Choudhury<br>
-      Gauhati University / IGNOU<br>
-      Guwahati, Assam, IN<br>
-      April 2026
-    </div>
-  </div>
-</div>
+<header>
+  <div class="name">Ronit Choudhury</div>
+  <div class="tagline">CS · ECONOMICS · DESIGN — GUWAHATI, ASSAM</div>
+</header>
 
-<!-- ════════════════════════════════════════════
-     ASCII HERO
-═══════════════════════════════════════════════ -->
-<div class="ascii-hero">
-<pre>
-  ██████╗  ██████╗ ███╗   ██╗██╗████████╗
-  ██╔══██╗██╔═══██╗████╗  ██║██║╚══██╔══╝
-  ██████╔╝██║   ██║██╔██╗ ██║██║   ██║
-  ██╔══██╗██║   ██║██║╚██╗██║██║   ██║
-  ██║  ██║╚██████╔╝██║ ╚████║██║   ██║
-  ╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═══╝╚═╝   ╚═╝
-</pre>
-<pre class="accent-line">
-  ██████╗██╗  ██╗ ██████╗ ██╗   ██╗██████╗ ██╗  ██╗██╗   ██╗██████╗ ██╗   ██╗
-  ██╔════╝██║  ██║██╔═══██╗██║   ██║██╔══██╗██║  ██║██║   ██║██╔══██╗╚██╗ ██╔╝
-  ██║     ███████║██║   ██║██║   ██║██║  ██║███████║██║   ██║██████╔╝ ╚████╔╝
-  ██║     ██╔══██║██║   ██║██║   ██║██║  ██║██╔══██║██║   ██║██╔══██╗  ╚██╔╝
-  ╚██████╗██║  ██║╚██████╔╝╚██████╔╝██████╔╝██║  ██║╚██████╔╝██║  ██║   ██║
-   ╚═════╝╚═╝  ╚═╝ ╚═════╝  ╚═════╝ ╚═════╝ ╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═╝   ╚═╝
-</pre>
-<pre style="font-size:12px; color:var(--muted); margin-top:8px;">
-  CS ∩ Econ ∩ Design  ·  Guwahati, Assam, IN  ·  <span style="color:var(--accent)">RFC 0001</span>
-</pre>
-</div>
-
-<!-- ════════════════════════════════════════════
-     RFC TITLE BLOCK
-═══════════════════════════════════════════════ -->
-<div class="rfc-title-block">
-  <div class="rfc-number">RFC 0001</div>
-  <h1>Personal Specification for Ronit Choudhury<span class="cursor"></span></h1>
-  <div class="rfc-meta">
-    <span class="key">Status:</span>
-    <span class="val">ACTIVE (Living Document)</span>
-
-    <span class="key">Category:</span>
-    <span class="val">Individual Specification / Portfolio</span>
-
-    <span class="key">Author:</span>
-    <span class="val">Ronit Choudhury &lt;<a href="mailto:choudhury.ronit@proton.me">choudhury.ronit@proton.me</a>&gt;</span>
-
-    <span class="key">Location:</span>
-    <span class="val">Guwahati, Assam, India</span>
-
-    <span class="key">Primary Pursuit:</span>
-    <span class="val">Theoretical Computer Science</span>
-
-    <span class="key">GitHub:</span>
-    <span class="val"><a href="https://github.com/nonQualities" target="_blank">github.com/nonQualities</a></span>
-
-    <span class="key">Created:</span>
-    <span class="val">2026</span>
-
-    <span class="key">Obsoletes:</span>
-    <span class="val">N/A</span>
-  </div>
-</div>
-
-<!-- ════════════════════════════════════════════
-     ABSTRACT
-═══════════════════════════════════════════════ -->
-<div class="section" id="abstract">
-  <div class="section-label">SECTION 0</div>
-  <h2>Abstract</h2>
+<!-- ABOUT -->
+<section id="about">
+  <h2>About</h2>
   <p>
-    This document specifies the academic profile, technical competencies, project
-    implementations, and contact endpoints of Ronit Choudhury — a student of
-    complexity pursuing an Integrated MSc in Software Development at Gauhati University
-    concurrently with a BA in Economics at IGNOU. This RFC serves as the authoritative
-    reference for understanding the capabilities, interests, and contact protocols of
-    the specified individual. Implementations wishing to establish communication SHOULD
-    consult Section 7 (Contact Endpoints) before initiating a session.
+    Second-year student doing an Integrated MSc in Software Development at Gauhati University,
+    concurrently reading Economics at IGNOU. Interested in theoretical computer science —
+    computability, type theory, complexity — and what lies beneath computation mathematically.
   </p>
-</div>
-
-<!-- TICKER -->
-<div class="ticker" aria-hidden="true">
-  <div class="ticker-inner">
-    <span class="red">■</span>
-    <span>COMPUTABILITY</span>
-    <span class="red">■</span>
-    <span>TYPE THEORY</span>
-    <span class="red">■</span>
-    <span>FORMAL METHODS</span>
-    <span class="red">■</span>
-    <span>HASKELL</span>
-    <span class="red">■</span>
-    <span>LAMBDA CALCULUS</span>
-    <span class="red">■</span>
-    <span>ECONOMETRICS</span>
-    <span class="red">■</span>
-    <span>FINE ARTS</span>
-    <span class="red">■</span>
-    <span>FUNCTIONAL PROGRAMMING</span>
-    <span class="red">■</span>
-    <span>COMPLEXITY THEORY</span>
-    <span class="red">■</span>
-    <span>HCI</span>
-    <span class="red">■</span>
-    <span>ASSAMESE POETRY</span>
-    <span class="red">■</span>
-    <span>COMPUTABILITY</span>
-    <span class="red">■</span>
-    <span>TYPE THEORY</span>
-    <span class="red">■</span>
-    <span>FORMAL METHODS</span>
-    <span class="red">■</span>
-    <span>HASKELL</span>
-    <span class="red">■</span>
-    <span>LAMBDA CALCULUS</span>
-    <span class="red">■</span>
-    <span>ECONOMETRICS</span>
-    <span class="red">■</span>
-    <span>FINE ARTS</span>
-    <span class="red">■</span>
-    <span>FUNCTIONAL PROGRAMMING</span>
-    <span class="red">■</span>
-    <span>COMPLEXITY THEORY</span>
-    <span class="red">■</span>
-    <span>HCI</span>
-    <span class="red">■</span>
-    <span>ASSAMESE POETRY</span>
-    <span class="red">■</span>
-  </div>
-</div>
-
-<!-- ════════════════════════════════════════════
-     TABLE OF CONTENTS
-═══════════════════════════════════════════════ -->
-<div class="toc" id="toc">
-  <div class="toc-title">TABLE OF CONTENTS</div>
-  <ol>
-    <li>
-      <span class="toc-num">1.</span>
-      <a href="#about">About &amp; Identity Protocol</a>
-      <span class="toc-dots"></span>
-      <span class="toc-page">§1</span>
-    </li>
-    <li>
-      <span class="toc-num">2.</span>
-      <a href="#education">Educational Formation</a>
-      <span class="toc-dots"></span>
-      <span class="toc-page">§2</span>
-    </li>
-    <li>
-      <span class="toc-num">3.</span>
-      <a href="#stack">Stack &amp; Competency Registry</a>
-      <span class="toc-dots"></span>
-      <span class="toc-page">§3</span>
-    </li>
-    <li>
-      <span class="toc-num">4.</span>
-      <a href="#projects">Project Implementations</a>
-      <span class="toc-dots"></span>
-      <span class="toc-page">§4</span>
-    </li>
-    <li>
-      <span class="toc-num">5.</span>
-      <a href="#experience">Work Experience Record</a>
-      <span class="toc-dots"></span>
-      <span class="toc-page">§5</span>
-    </li>
-    <li>
-      <span class="toc-num">6.</span>
-      <a href="#github">GitHub Activity Feed</a>
-      <span class="toc-dots"></span>
-      <span class="toc-page">§6</span>
-    </li>
-    <li>
-      <span class="toc-num">7.</span>
-      <a href="#contact">Contact Endpoints</a>
-      <span class="toc-dots"></span>
-      <span class="toc-page">§7</span>
-    </li>
-    <li>
-      <span class="toc-num">8.</span>
-      <a href="#security">Security Considerations</a>
-      <span class="toc-dots"></span>
-      <span class="toc-page">§8</span>
-    </li>
-  </ol>
-</div>
-
-<hr class="rule">
-
-<!-- ════════════════════════════════════════════
-     §1 — ABOUT
-═══════════════════════════════════════════════ -->
-<div class="section" id="about">
-  <div class="section-label">SECTION 1</div>
-  <h2>1.  About &amp; Identity Protocol</h2>
-
   <p>
-    Ronit Choudhury is a student of complexity — equally at home in the formal
-    elegance of a mathematical proof, the structural logic of an economic model,
-    and the intuitive craft of visual design.
-  </p>
-  <br>
-  <p>
-    Pursuing an Integrated MSc in Software Development at Gauhati University while
-    concurrently reading Economics at IGNOU, the specified individual is building a
-    foundation spanning theoretical computer science, formal methods, and quantitative
-    reasoning. Long-term objective: work at the frontier of theoretical computer
-    science — computability, type theory, complexity, and the deep mathematical
-    structures beneath computation.
-  </p>
-  <br>
-  <p>
-    Exhibits a genuine fondness for functional programming — Haskell in particular —
-    because it forces disciplined abstraction that the author finds intellectually
-    honest. A background in Fine Arts informs everything designed.
+    Background in Fine Arts. Partial to Haskell because it forces you to be honest about
+    what you're doing.
   </p>
 
-  <br>
-
-  <div class="terminal">
-    <div class="body">
-      <span class="prompt">$</span> whoami<br>
-      &gt; ronit_choudhury :: CS ∩ Economics ∩ Design<br>
-      <span class="prompt">$</span> location<br>
-      &gt; Guwahati, Assam, IN<br>
-      <span class="prompt">$</span> seeking<br>
-      &gt; Theoretical CS · Research<br>
-      <span class="prompt">$</span> status<br>
-      &gt; MSc Software Dev [Y2/5] · BA Economics [Y1/3]<br>
-      <span class="prompt">$</span> <span style="animation: blink 1s step-end infinite; display:inline-block; background:#c0392b; width:8px; height:1em; vertical-align:text-bottom;"></span>
-    </div>
-  </div>
-
-  <br>
-
-  <div class="subsection">
-    <h3>1.1  Identity Metadata</h3>
-    <table class="field-table">
-      <tr><td class="field-key">Full Name</td><td>Ronit Choudhury</td></tr>
-      <tr><td class="field-key">Location</td><td>Guwahati, Assam, India</td></tr>
-      <tr><td class="field-key">Primary Pursuit</td><td>Theoretical Computer Science</td></tr>
-      <tr><td class="field-key">Background</td><td>Software Dev · Economics · Fine Arts · Design</td></tr>
-      <tr><td class="field-key">GitHub</td><td><a href="https://github.com/nonQualities" target="_blank">github.com/nonQualities</a></td></tr>
-      <tr><td class="field-key">Email (Primary)</td><td><a href="mailto:choudhury.ronit@proton.me">choudhury.ronit@proton.me</a></td></tr>
-    </table>
-  </div>
-
-  <div class="subsection">
-    <h3>1.2  Interest Domains</h3>
-    <div class="tags">
-      <span class="tag accent">Computability</span>
-      <span class="tag accent">Type Theory</span>
-      <span class="tag">Formal Methods</span>
-      <span class="tag">Mathematics</span>
-      <span class="tag accent">Haskell</span>
-      <span class="tag">Economics</span>
-      <span class="tag">Econometrics</span>
-      <span class="tag">Assamese Poetry</span>
-      <span class="tag">Fine Arts</span>
-      <span class="tag">HCI</span>
-      <span class="tag">Functional Programming</span>
-      <span class="tag">Language Design</span>
-    </div>
-  </div>
-</div>
-
-<hr class="rule">
-
-<!-- ════════════════════════════════════════════
-     §2 — EDUCATION
-═══════════════════════════════════════════════ -->
-<div class="section" id="education">
-  <div class="section-label">SECTION 2</div>
-  <h2>2.  Educational Formation</h2>
-
-  <div class="subsection">
-    <h3>2.1  Primary Program</h3>
-    <div class="status-badge">ONGOING · 2024 — 2029</div>
-    <p><strong>INTEGRATED MSC — SOFTWARE DEVELOPMENT</strong></p>
-    <p>Gauhati University, Department of Information Technology · Guwahati, Assam</p>
-    <br>
-    <p>
-      A rigorous five-year program covering the full arc of computer science — from
-      foundational mathematics and algorithms through systems programming, database
-      architecture, and software engineering. Pursued with particular interest in
-      theoretical foundations: computability, formal languages, discrete structures,
-      and the mathematical machinery beneath computation.
-    </p>
-  </div>
-
-  <div class="subsection">
-    <h3>2.2  Concurrent Program</h3>
-    <div class="status-badge">ONGOING · 2025 — 2028</div>
-    <p><strong>BACHELOR OF ARTS — ECONOMICS</strong></p>
-    <p>Indira Gandhi National Open University (IGNOU), School of Social Sciences</p>
-    <br>
-    <p>
-      Formal study of economics pursued in parallel — covering microeconomic theory,
-      macroeconomics, and the mathematical apparatus of econometrics. Approaching
-      economics as a formal quantitative discipline: structural logic of markets,
-      incentive design, and the probabilistic reasoning underlying statistical inference.
-    </p>
-  </div>
-
-<pre style="font-size:11px; color:var(--muted); margin: 24px 0; line-height:1.5;">
-  FORMATION TIMELINE
-  ────────────────────────────────────────────────────
-  2024  ████████████████████████░░░░░░  MSc Software Dev [Y2/5]
-  2025  ████████░░░░░░░░░░░░░░░░░░░░░░  BA Economics [Y1/3]
-  ────────────────────────────────────────────────────
-        2024   2025   2026   2027   2028   2029
+<pre class="ascii">
+  λf.(λx.f(x x))(λx.f(x x))
+  ─── the Y combinator says hello ───
 </pre>
+</section>
 
-</div>
+<!-- STACK -->
+<section id="stack">
+  <h2>Stack & Core Competencies</h2>
 
-<hr class="rule">
+  <div class="stack-group">
+    <div class="stack-label">LANGUAGES</div>
+    <div class="stack-items">C, C++, C#, Java, Python, Haskell, Fortran, SQL, HTML/CSS/JS, R</div>
+  </div>
 
-<!-- ════════════════════════════════════════════
-     §3 — STACK
-═══════════════════════════════════════════════ -->
-<div class="section" id="stack">
-  <div class="section-label">SECTION 3</div>
-  <h2>3.  Stack &amp; Competency Registry</h2>
+  <div class="stack-group">
+    <div class="stack-label">FRAMEWORKS & TOOLS</div>
+    <div class="stack-items">ASP.NET Core, Avalonia UI, Entity Framework, WebSockets, FastAPI, Redis,
+PostgreSQL, Podman, NumPy, Scikit-Learn, StatsModel, Git</div>
+  </div>
 
-  <div class="two-col">
-    <div class="subsection">
-      <h3>3.1  Languages</h3>
-      <div class="tags">
-        <span class="tag accent">Haskell</span>
-        <span class="tag">Python</span>
-        <span class="tag">C</span>
-        <span class="tag">C++</span>
-        <span class="tag">C#</span>
-        <span class="tag">HTML/CSS/TS</span>
-        <span class="tag">Java</span>
-        <span class="tag">Fortran</span>
-        <span class="tag">SQL</span>
-      </div>
+  <div class="stack-group">
+    <div class="stack-label">DESIGN</div>
+    <div class="stack-items">Figma, Inkscape, Adobe Illustrator, FreeCAD, Krita — WCAG-compliant UI/UX</div>
+  </div>
+
+  <div class="stack-group">
+    <div class="stack-label">THEORETICAL</div>
+    <div class="stack-items">Discrete Mathematics, Automata Theory, Type Theory, Graph Theory,
+Algorithm Design, Linear Algebra, Probability, Statistical Inference,
+Microeconomics, Macroeconomics</div>
+  </div>
+
+  <div class="stack-group">
+    <div class="stack-label">PARADIGMS</div>
+    <div class="stack-items">Functional Programming, OOP, Systems Design, FSM Theory, Scientific Computing</div>
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section id="projects">
+  <h2>Projects</h2>
+
+  <div class="project">
+    <div class="project-header">
+      <span class="project-name">OmniBus</span>
+      <span class="project-lang">Python · FastAPI · WebSockets · Redis · PostgreSQL · Flutter</span>
     </div>
+    <div class="project-desc">
+      Real-time bus tracking system for Gauhati University. GPS from a driver app, live
+      WebSocket updates to a student interface, Redis pub/sub for location propagation.
+      Co-architected the ML-based ETA prediction; designed the UI/UX and system architecture.
+    </div>
+    <a class="project-link" href="https://github.com/orgs/The3AMOrg/repositories" target="_blank">github.com/The3AMOrg →</a>
+  </div>
 
-    <div class="subsection">
-      <h3>3.2  Frameworks &amp; Tools</h3>
-      <div class="tags">
-        <span class="tag">.NET</span>
-        <span class="tag">ASP.NET Core</span>
-        <span class="tag">Entity Framework</span>
-        <span class="tag">WebSockets</span>
-        <span class="tag">Podman</span>
-        <span class="tag">Scikit-Learn</span>
-        <span class="tag">Statsmodel</span>
-        <span class="tag">Git</span>
-      </div>
+  <div class="project">
+    <div class="project-header">
+      <span class="project-name">Dasam — FSM Simulator</span>
+      <span class="project-lang">C# · Avalonia UI</span>
+    </div>
+    <div class="project-desc">
+      Cross-platform finite state machine simulator with visual state tracing,
+      real-time transition logic, and an accessibility-first GUI.
+    </div>
+    <a class="project-link" href="https://github.com/nonQualities" target="_blank">github.com/nonQualities →</a>
+  </div>
+
+  <div class="project">
+    <div class="project-header">
+      <span class="project-name">Fluid Simulation Engine</span>
+      <span class="project-lang">C++</span>
+    </div>
+    <div class="project-desc">
+      2D Lattice Boltzmann Method based mesoscopic fluid dynamics. Optimised memory layout
+      and computation loops for high frame-rate interactive rendering.
     </div>
   </div>
 
-  <div class="two-col">
-    <div class="subsection">
-      <h3>3.3  Theoretical</h3>
-      <div class="tags">
-        <span class="tag accent">Discrete Mathematics</span>
-        <span class="tag accent">Type Theory</span>
-        <span class="tag">Automata Theory</span>
-        <span class="tag">Graph Theory</span>
-        <span class="tag">Algorithm Design</span>
-        <span class="tag">Linear Algebra</span>
-        <span class="tag">Probability Theory</span>
-        <span class="tag">Statistical Inference</span>
-        <span class="tag">Microeconomics</span>
-        <span class="tag">Macroeconomics</span>
-      </div>
+  <div class="project">
+    <div class="project-header">
+      <span class="project-name">DSL Prototype & Expression Evaluator</span>
+      <span class="project-lang">Haskell</span>
     </div>
-
-    <div class="subsection">
-      <h3>3.4  Design</h3>
-      <div class="tags">
-        <span class="tag">UI/UX Design</span>
-        <span class="tag">Typography</span>
-        <span class="tag">Graphic Design</span>
-        <span class="tag">Fine Arts</span>
-        <span class="tag">Figma</span>
-        <span class="tag">Inkscape</span>
-        <span class="tag">Krita</span>
-      </div>
+    <div class="project-desc">
+      Domain-specific language with a custom parser and evaluator built using monadic
+      composition and type-safe functional paradigms.
     </div>
-  </div>
-
-  <div class="two-col">
-    <div class="subsection">
-      <h3>3.5  Paradigms</h3>
-      <div class="tags">
-        <span class="tag accent">Functional Programming</span>
-        <span class="tag">OOP</span>
-        <span class="tag">Declarative</span>
-        <span class="tag">Systems Design</span>
-        <span class="tag">Web APIs</span>
-        <span class="tag">Scientific Computing</span>
-      </div>
-    </div>
-
-    <div class="subsection">
-      <h3>3.6  Human Languages</h3>
-      <div class="tags">
-        <span class="tag accent">Assamese (Native)</span>
-        <span class="tag">English (Bilingual)</span>
-        <span class="tag">Hindi (Fluent)</span>
-        <span class="tag">Sanskrit (Elementary)</span>
-      </div>
-    </div>
-  </div>
-</div>
-
-<hr class="rule">
-
-<!-- ════════════════════════════════════════════
-     §4 — PROJECTS
-═══════════════════════════════════════════════ -->
-<div class="section" id="projects">
-  <div class="section-label">SECTION 4</div>
-  <h2>4.  Project Implementations</h2>
-
-  <p style="font-size:12px; color:var(--muted); margin-bottom:20px;">
-    The following subsections describe active and completed project implementations.
-    Each entry MUST include: identifier, description, technology stack, and repository
-    reference where applicable.
-  </p>
-
-  <!-- OmniBus -->
-  <div class="project-block">
-    <span class="project-num">001 · FEATURED</span>
-    <div class="status-badge">ACTIVE</div>
-    <h3>OmniBus — Bus Tracking Service</h3>
-    <div class="subtitle">REAL-TIME TRANSIT INTELLIGENCE</div>
-    <p>
-      A full-stack real-time bus tracking system for Gauhati University. GPS broadcasting
-      from a driver app, live WebSocket updates to a React student interface, and Redis
-      pub/sub for sub-second location propagation. Phase 2 targets native Android with
-      offline capability.
-    </p>
-    <div class="tags" style="margin-bottom:12px;">
-      <span class="tag">FastAPI</span>
-      <span class="tag">WebSockets</span>
-      <span class="tag">Redis</span>
-      <span class="tag">PostgreSQL</span>
-      <span class="tag">Flutter</span>
-      <span class="tag">Android/Dart</span>
-    </div>
-    <a href="https://github.com/orgs/The3AMOrg/repositories" target="_blank">
-      View Repository →
-    </a>
-  </div>
-
-  <!-- Lambda Evaluator -->
-  <div class="project-block">
-    <span class="project-num">002</span>
-    <div class="status-badge">COMPLETE</div>
-    <h3>Lambda Evaluator</h3>
-    <div class="subtitle">FUNCTIONAL · HASKELL</div>
-    <p>
-      A lambda calculus interpreter with β-reduction, η-reduction, Church encodings, and
-      pretty-printed reduction traces. Explores the mathematical foundation of computation.
-    </p>
-<pre style="font-size:11px; color:var(--muted); margin: 8px 0; line-height:1.6;">
+<pre class="ascii">
   (λx. λy. x y) M N
   ──β──▶  (λy. M y) N
   ──β──▶  M N
 </pre>
-    <div class="tags" style="margin-bottom:12px;">
-      <span class="tag accent">Haskell</span>
-      <span class="tag">Parsec</span>
-      <span class="tag">Lambda Calculus</span>
+  </div>
+
+  <div class="project">
+    <div class="project-header">
+      <span class="project-name">FSynth — ADSR Audio Synthesizer</span>
+      <span class="project-lang">Fortran</span>
     </div>
-    <a href="https://github.com/nonQualities" target="_blank">
-      GitHub →
-    </a>
-  </div>
-
-  <!-- FSynth -->
-  <div class="project-block">
-    <span class="project-num">003</span>
-    <div class="status-badge">COMPLETE</div>
-    <h3>FSynth — ADSR Synthesiser</h3>
-    <div class="subtitle">FORTRAN · SIGNAL PROCESSING</div>
-    <p>
-      A simple ADSR synthesizer implemented in Fortran, demonstrating signal processing
-      concepts and real-time audio generation.
-    </p>
-<pre style="font-size:11px; color:var(--muted); margin: 8px 0; line-height:1.6;">
-  ATTACK ──▶ DECAY ──▶ SUSTAIN ──▶ RELEASE
-  /‾‾‾\_____________________|      \___
-</pre>
-    <div class="tags" style="margin-bottom:12px;">
-      <span class="tag">Fortran</span>
-      <span class="tag">Signal Processing</span>
+    <div class="project-desc">
+      Low-level audio engine implementing ADSR envelope modelling and real-time waveform
+      generation. Emphasis on numerical precision.
     </div>
-    <a href="https://github.com/nonQualities/synth/" target="_blank">
-      GitHub →
-    </a>
+    <a class="project-link" href="https://github.com/nonQualities/synth/" target="_blank">github.com/nonQualities/synth →</a>
   </div>
-</div>
 
-<hr class="rule">
-
-<!-- ════════════════════════════════════════════
-     §5 — EXPERIENCE
-═══════════════════════════════════════════════ -->
-<div class="section" id="experience">
-  <div class="section-label">SECTION 5</div>
-  <h2>5.  Work Experience Record</h2>
-
-  <div class="subsection">
-    <h3>5.1  Graphics Specialist</h3>
-    <div class="status-badge">COMPLETE · July 2025 — September 2025</div>
-    <p><strong>University Project</strong></p>
-    <br>
-    <ul>
-      <li>
-        Worked on visual design and implementation for clients; branding and identity
-        including logo design and identity formulation.
-      </li>
-      <li>
-        Worked on marketing and promotional material for clients, creating compelling
-        visuals and copy.
-      </li>
-    </ul>
+  <div class="project">
+    <div class="project-header">
+      <span class="project-name">Xasya — Agricultural Information Platform</span>
+      <span class="project-lang">HTML · CSS · JS</span>
+    </div>
+    <div class="project-desc">
+      Responsive, WCAG-compliant web platform for rural communities. Optimised for
+      low-bandwidth and multilingual access.
+    </div>
   </div>
-</div>
+</section>
 
-<hr class="rule">
+<!-- GITHUB -->
+<section id="github">
+  <h2>GitHub — nonQualities</h2>
 
-<!-- ════════════════════════════════════════════
-     §6 — GITHUB
-═══════════════════════════════════════════════ -->
-<div class="section" id="github">
-  <div class="section-label">SECTION 6</div>
-  <h2>6.  GitHub Activity Feed</h2>
+  <div class="gh-block">
+    <div id="gh-profile-stats" class="loading">fetching profile...</div>
+    <div id="gh-repos-list"></div>
+  </div>
 
-  <p style="font-size:12px; color:var(--muted); margin-bottom:16px;">
-    Live activity data is available at the canonical source. Metrics below are
-    approximate floor values; consult the authoritative record for current counts.
+  <p style="margin-top: 12px; font-size: 12px;">
+    <a href="https://github.com/nonQualities" target="_blank">→ github.com/nonQualities</a>
   </p>
+</section>
 
-<pre style="font-size:11px; line-height:1.8; color:var(--muted);">
-  ┌──────────────────────────────────────────────────────┐
-  │  GITHUB PROFILE  ·  nonQualities                     │
-  ├─────────────────┬─────────────────┬──────────────────┤
-  │  Repositories   │  Languages      │  Curiosity       │
-  │      8+         │      7+         │      ∞           │
-  ├─────────────────┴─────────────────┴──────────────────┤
-  │  Primary Language: <span style="color:var(--accent)">Haskell</span>                           │
-  │  Profile:  github.com/nonQualities                   │
-  └──────────────────────────────────────────────────────┘
+<!-- READING -->
+<section id="reading">
+  <h2>What I'm Reading</h2>
+
+<pre class="ascii">
+  [==========        ] fiction
+  [======            ] math
+  [====              ] CS
+  [========          ] history
 </pre>
 
-  <p style="font-size:12px; margin-top:12px;">
-    <a href="https://github.com/nonQualities" target="_blank"
-       style="color:var(--accent); text-decoration:none; border-bottom: 1px dotted var(--accent);">
-      → View full profile on GitHub
-    </a>
-  </p>
-</div>
-
-<hr class="rule">
-
-<!-- ════════════════════════════════════════════
-     §7 — CONTACT
-═══════════════════════════════════════════════ -->
-<div class="section" id="contact">
-  <div class="section-label">SECTION 7</div>
-  <h2>7.  Contact Endpoints</h2>
-
-  <p style="font-size:12px; color:var(--muted); margin-bottom:20px;">
-    Whether the initiating party is interested in theoretical CS, design collaboration,
-    economics research, or simply wishes to exchange ideas — the author is available via
-    the following endpoints. Implementations SHOULD prefer the Proton endpoint for
-    encrypted communication.
-  </p>
-
-  <div class="contact-grid">
-    <a href="mailto:choudhury.ronit@proton.me" class="contact-item">
-      <span class="contact-type">EMAIL · PROTON</span>
-      choudhury.ronit@proton.me
-      <span class="contact-arrow">→</span>
-    </a>
-    <a href="mailto:ronitchoudhury965@gmail.com" class="contact-item">
-      <span class="contact-type">EMAIL · GMAIL</span>
-      ronitchoudhury965@gmail.com
-      <span class="contact-arrow">→</span>
-    </a>
-    <a href="mailto:Ronit965choudhury@outlook.com" class="contact-item">
-      <span class="contact-type">EMAIL · OUTLOOK</span>
-      Ronit965choudhury@outlook.com
-      <span class="contact-arrow">→</span>
-    </a>
-    <a href="https://github.com/nonQualities" target="_blank" class="contact-item">
-      <span class="contact-type">REPOSITORY</span>
-      github.com/nonQualities
-      <span class="contact-arrow">↗</span>
-    </a>
-    <a href="https://www.linkedin.com/in/ronit-choudhury-2672ab404/" target="_blank" class="contact-item">
-      <span class="contact-type">PROFESSIONAL NETWORK</span>
-      Ronit Choudhury · LinkedIn
-      <span class="contact-arrow">↗</span>
-    </a>
+  <div class="book">
+    <div class="book-title">War and Peace</div>
+    <div class="book-author">Leo Tolstoy</div>
   </div>
-</div>
+  <div class="book">
+    <div class="book-title">Discrete Mathematical Structures with Applications to CS</div>
+    <div class="book-author">Tremblay & Manohar</div>
+  </div>
+  <div class="book">
+    <div class="book-title">Foundations of Cryptography</div>
+    <div class="book-author">Oded Goldreich</div>
+  </div>
+  <div class="book">
+    <div class="book-title">Ghost in the Wires</div>
+    <div class="book-author">Kevin Mitnick</div>
+  </div>
+</section>
 
-<hr class="rule">
+<!-- BLOGS -->
+<section id="blogs">
+  <h2>Writing</h2>
 
-<!-- ════════════════════════════════════════════
-     §8 — SECURITY CONSIDERATIONS
-═══════════════════════════════════════════════ -->
-<div class="section" id="security">
-  <div class="section-label">SECTION 8</div>
-  <h2>8.  Security Considerations</h2>
-  <p style="font-size:13px;">
-    Initiating parties SHOULD use encrypted channels (Proton Mail) when transmitting
-    sensitive proposals or research material. The author does not guarantee response
-    latency on non-primary endpoints. All links in this document are provided as-is.
-    This RFC does not constitute a legally binding agreement of any kind.
+  <div class="blog-post">
+    <a class="blog-title" href="https://medium.com/@ronitchoudhury965/i-built-a-csma-simulator-and-accidentally-read-a-1975-paper-about-it-66dfe56c35ea" target="_blank">
+      I Built a CSMA Simulator and Accidentally Read a 1975 Paper About It
+    </a>
+    <div class="blog-meta">April 2026 · Medium</div>
+  </div>
+
+  <div class="blog-post">
+    <a class="blog-title" href="https://medium.com/@ronitchoudhury965/hopefully-a-hopeful-piece-of-literature-e0299bbbc7d0" target="_blank">
+      Hopefully, A Hopeful Piece of Literature
+    </a>
+    <div class="blog-meta">December 2023 · Medium</div>
+  </div>
+
+  <p style="margin-top: 14px; font-size: 12px;">
+    <a href="https://medium.com/@ronitchoudhury965" target="_blank">→ all posts on Medium</a>
   </p>
-</div>
+</section>
 
-<hr class="rule">
+<!-- CONTACT -->
+<section id="contact">
+  <h2>Contact</h2>
 
-<!-- ════════════════════════════════════════════
-     ASCII FOOTER DECORATION
-═══════════════════════════════════════════════ -->
-<pre style="font-size:10px; color:var(--muted); text-align:center; margin: 32px 0 16px; line-height:1.5; user-select:none;">
-  ∀x. (curious(x) ∧ rigorous(x)) → interesting(x)
-  ──────────────────────────────────────────────────
-  λf.(λx.f(x x))(λx.f(x x))   ⊢ τ : Type   O(n log n)
+<pre class="ascii">
+  ┌─────────────────────────────────┐
+  │  prefer proton for anything     │
+  │  that matters                   │
+  └─────────────────────────────────┘
 </pre>
 
-<!-- ════════════════════════════════════════════
-     RFC FOOTER
-═══════════════════════════════════════════════ -->
-<div class="rfc-footer">
-  <span>
-    Choudhury &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-    [Page 1]
-  </span>
-  <span>
-    RFC 0001 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-    Personal Specification &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-    April 2026
-  </span>
-</div>
+  <div class="contact-row">
+    <span class="contact-type">email</span>
+    <a href="mailto:choudhury.ronit@proton.me">choudhury.ronit@proton.me</a>
+  </div>
+  <div class="contact-row">
+    <span class="contact-type">email</span>
+    <a href="mailto:ronitchoudhury965@gmail.com">ronitchoudhury965@gmail.com</a>
+  </div>
+  <div class="contact-row">
+    <span class="contact-type">github</span>
+    <a href="https://github.com/nonQualities" target="_blank">github.com/nonQualities</a>
+  </div>
+  <div class="contact-row">
+    <span class="contact-type">linkedin</span>
+    <a href="https://www.linkedin.com/in/ronit-choudhury-2672ab404/" target="_blank">Ronit Choudhury</a>
+  </div>
+</section>
 
-<div style="text-align:center; margin-top:20px; font-size:11px; color:var(--muted);">
-  © 2026 Ronit Choudhury · Guwahati, Assam, India ·
-  <a href="https://github.com/nonQualities" target="_blank">GitHub</a> ·
-  <a href="mailto:choudhury.ronit@proton.me">Proton</a> ·
-  <a href="https://www.linkedin.com/in/ronit-choudhury-2672ab404/" target="_blank">LinkedIn</a>
-</div>
+<footer>
+  Ronit Choudhury · Guwahati, Assam · 2026
+</footer>
+
+<script>
+  async function loadGitHub() {
+    const statsEl = document.getElementById('gh-profile-stats');
+    const reposEl = document.getElementById('gh-repos-list');
+
+    try {
+      const [userRes, reposRes] = await Promise.all([
+        fetch('https://api.github.com/users/nonQualities'),
+        fetch('https://api.github.com/users/nonQualities/repos?sort=updated&per_page=10')
+      ]);
+
+      if (!userRes.ok || !reposRes.ok) throw new Error('API error');
+
+      const user = await userRes.json();
+      const repos = await reposRes.json();
+
+      // Profile stats
+      statsEl.innerHTML = `
+        <div class="gh-row">
+          <span class="gh-key">profile</span>
+          <span class="gh-val">@nonQualities</span>
+        </div>
+        <div class="gh-row">
+          <span class="gh-key">public repos</span>
+          <span class="gh-val">${user.public_repos}</span>
+        </div>
+        <div class="gh-row">
+          <span class="gh-key">followers</span>
+          <span class="gh-val">${user.followers}</span>
+        </div>
+        ${user.bio ? `<div class="gh-row"><span class="gh-key">bio</span><span class="gh-val">${user.bio}</span></div>` : ''}
+      `;
+
+      // Repo list
+      if (repos.length > 0) {
+        const publicRepos = repos.filter(r => !r.fork);
+        reposEl.innerHTML = '<div style="font-size:11px; color:var(--muted); letter-spacing:1.5px; margin: 16px 0 10px;">RECENT REPOS</div>' +
+          publicRepos.slice(0, 8).map(r => `
+            <div class="gh-repo">
+              <span class="gh-repo-name">
+                <a href="${r.html_url}" target="_blank">${r.name}</a>
+              </span>
+              <span class="gh-repo-meta">${r.language || '—'} · ★ ${r.stargazers_count}</span>
+            </div>
+          `).join('');
+      }
+
+    } catch (e) {
+      statsEl.innerHTML = `<span style="font-size:12px; color:var(--muted);">
+        could not load live data — 
+        <a href="https://github.com/nonQualities" target="_blank">visit profile directly</a>
+      </span>`;
+    }
+  }
+
+  loadGitHub();
+</script>
 
 </body>
 </html>
