@@ -2,313 +2,672 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.5">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Ronit Choudhury</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=JetBrains+Mono:wght@300;400;500;700&display=swap" rel="stylesheet">
+
 <style>
-  :root {
-    --bg: #fff9f1;
-    --text: #1c1c1a;
-    --muted: #6b6b65;
-    --accent: #7e0000;
-    --border: #d4d4ce;
-    --surface: #fef3e2;
-    --mono: 'Courier New', Courier, monospace;
-    --serif: 'Playfair Display', 'Garamond', serif;
-  }
+/* ══════════════════════════════════════
+   TOKENS
+══════════════════════════════════════ */
+:root {
+  --bg:        #f0f4ff;
+  --text:      #0d1b3e;
+  --muted:     #5a6a9a;
+  --muted2:    #8898c4;
+  --accent:    #2450c8;
+  --accent-dk: #1a3d9f;
+  --accent-lt: #dce8ff;
+  --border:    #c4d0ee;
+  --border-lt: #dde6f8;
+  --surface:   #e8f0ff;
+  --surface2:  #d6e2ff;
+  --shadow-sm: 0 2px 8px rgba(36,80,200,0.08);
+  --shadow-md: 0 6px 24px rgba(36,80,200,0.13);
+  --mono: 'JetBrains Mono', 'Courier New', monospace;
+  --serif: 'EB Garamond', 'Palatino Linotype', Georgia, serif;
+  --nav-h: 52px;
+  --r: 3px;
+}
 
-  * { margin: 0; padding: 0; box-sizing: border-box; }
+/* ══════════════════════════════════════
+   RESET & BASE
+══════════════════════════════════════ */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
 
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: var(--mono);
-    font-size: 14px;
-    line-height: 1.7;
-    max-width: 720px;
-    margin: 0 auto;
-    padding: 80px 24px 100px;
-  }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--mono);
+  font-size: 13.5px;
+  font-weight: 400;
+  line-height: 1.75;
+  overflow-x: hidden;
+}
 
-  a { color: var(--accent); text-decoration: none; border-bottom: 1px dotted transparent; transition: border-color 0.2s; }
-  a:hover { border-bottom-color: var(--accent); }
+/* Dot-grid texture */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: radial-gradient(circle, rgba(36,80,200,0.10) 1px, transparent 1px);
+  background-size: 26px 26px;
+  pointer-events: none;
+  z-index: 0;
+}
 
-  /* ── TYPOGRAPHY & HEADER ── */
-  header {
-    margin-bottom: 60px;
-  }
+/* Top gradient veil */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(220,232,255,0.5) 0%, transparent 38%);
+  pointer-events: none;
+  z-index: 0;
+}
 
-  .name {
-    font-family: var(--serif);
-    font-size: 80px;
-    font-weight: normal;
-    color: var(--text);
-    font-style:italic;
-    margin-bottom: 0px;
-    letter-spacing: -0.5px;
-  }
+.page-wrap {
+  position: relative;
+  z-index: 1;
+  max-width: 780px;
+  margin: 0 auto;
+  padding: calc(var(--nav-h) + 68px) 32px 100px;
+}
 
-  .joke {
-    font-family: var(--mono);
-    font-size: 10px;
-    color: var(--muted);
-    font-style: normal;
-    letter-spacing: 0;
-    vertical-align: middle;
-    margin-left: 1px;
-    opacity: 0.7;
-  }
+/* ══════════════════════════════════════
+   LINKS
+══════════════════════════════════════ */
+a {
+  color: var(--accent);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: color 0.18s, border-color 0.18s;
+}
+a:hover { color: var(--accent-dk); border-bottom-color: var(--accent); }
 
-  .tagline {
-    font-size: 12px;
-    color: var(--text);
-    letter-spacing: 2px;
-    border-top: 1px solid var(--border);
-    border-bottom: 1px solid var(--border);
-    padding: 12px 0;
-    margin-top: 24px;
-    display: flex;
-    justify-content: space-between;
-  }
+/* ══════════════════════════════════════
+   STICKY NAV
+══════════════════════════════════════ */
+.site-nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  height: var(--nav-h);
+  background: rgba(240,244,255,0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 32px;
+}
 
-  /* ── SECTIONS & TRANSITIONS ── */
-  section {
-    margin-bottom: 70px;
-  }
+.nav-logo {
+  font-family: var(--serif);
+  font-size: 20px;
+  font-style: italic;
+  color: var(--accent);
+  font-weight: 500;
+  flex-shrink: 0;
+}
 
-  .section-intro {
-    font-size: 23px;
-    color: var(--muted);
-    margin-bottom: 10px;
-    font-style: italic;
-    font-family: var(--serif);
-    line-height: 1.3;
-  }
+.nav-links {
+  display: flex;
+  gap: 24px;
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  flex-wrap: wrap;
+}
 
-  h2 {
-    font-family: var(--serif);
-    font-size: 50px;
-    font-weight: normal;
-    font-style: italic;
-    color: var(--accent);
-    margin-bottom: 12px;
-    display: flex;
-    align-items: center;
-    gap: 16px;
-  }
+.nav-links a {
+  color: var(--muted);
+  border-bottom: 1px solid transparent;
+  transition: color 0.18s, border-color 0.18s;
+}
+.nav-links a:hover { color: var(--accent); border-bottom-color: var(--accent); }
 
-  h2::after {
-    content: '';
-    flex: 1;
-    height: 1px;
-    background: var(--border);
-  }
+/* ══════════════════════════════════════
+   HEADER
+══════════════════════════════════════ */
+header { margin-bottom: 72px; }
 
-  p {
-    font-size: 15px;
-    color: var(--text);
-    margin-bottom: 16px;
-    text-align: justify; }
+.name {
+  font-family: var(--serif);
+  font-size: clamp(44px, 11vw, 84px);
+  font-weight: 400;
+  font-style: italic;
+  line-height: 1.08;
+  letter-spacing: -0.5px;
+  background: linear-gradient(135deg, #0d1b3e 0%, #2450c8 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  display: inline;
+}
 
-  .witty-aside {
-    font-size: 13.5px;
-    color: var(--muted);
-    border-left: 2px solid var(--accent);
-    padding-left: 12px;
-    margin: 16px 0;
-    font-style: italic;
-    background: var(--surface);
-    padding: 12px;
-  }
+.name-cursor {
+  display: inline-block;
+  width: 3px;
+  height: 0.68em;
+  background: var(--accent);
+  margin-left: 6px;
+  vertical-align: middle;
+  animation: blink 1s step-end infinite;
+  position: relative;
+  top: -6px;
+}
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
 
-  /* ── ASCII ── */
-  .ascii_horse {
-    font-size: 4px;
-    color: var(--muted);
-    line-height: 0.5;
-    margin: 2px 0;
-    user-select: none;
-    white-space: pre;
-  }
-  .ascii {
-    font-size: 2px;
-    color: var(--muted);
-    line-height: 0.7;
-    margin: 0px 0;
-    user-select: none;
-    white-space: pre;
-  }
-  
-   .ascii_me {
-    font-size: 0.5px;
-    color: var(--muted);
-    line-height: 0.8;
-    margin: 20px 20px;
-    user-select: none;
-    white-space: pre;
-  }
+.joke {
+  display: block;
+  font-family: var(--mono);
+  font-size: clamp(9px, 2vw, 11px);
+  color: var(--muted2);
+  margin-top: 4px;
+  margin-left: 2px;
+}
 
-  /* ── STACK ── */
-  .stack-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 24px;
-  }
+.tagline {
+  font-size: clamp(9px, 2.2vw, 11px);
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: var(--muted);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  padding: 11px 0;
+  margin-top: 28px;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+  position: relative;
+}
 
-  .stack-group {
-    background: var(--surface);
-    padding: 16px;
-    border: 1px solid var(--border);
-  }
+.tagline::before {
+  content: '';
+  position: absolute;
+  top: -3px; left: 0;
+  width: 6px; height: 6px;
+  background: var(--accent);
+  border-radius: 50%;
+}
 
-  .stack-label {
-    font-size: 12px;
-    color: var(--accent);
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    margin-bottom: 8px;
-    border-bottom: 1px dotted var(--border);
-    padding-bottom: 4px;
-  }
+/* ══════════════════════════════════════
+   SECTIONS
+══════════════════════════════════════ */
+section { margin-bottom: 80px; }
 
-  .stack-items {
-    font-size: 12.5px;
-    color: var(--text);
-  }
+.section-intro {
+  font-family: var(--serif);
+  font-size: clamp(17px, 4vw, 22px);
+  font-style: italic;
+  color: var(--muted);
+  line-height: 1.4;
+  margin-bottom: 24px;
+}
 
-  @media (max-width: 500px) {
-    .stack-grid { grid-template-columns: 1fr; }
-    .tagline { flex-direction: column; gap: 8px; }
-  }
+h2 {
+  font-family: var(--serif);
+  font-size: clamp(34px, 8vw, 52px);
+  font-weight: 400;
+  font-style: italic;
+  color: var(--accent);
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  line-height: 1;
+}
 
-  /* ── PROJECTS ── */
-  .project {
-    margin-bottom: 40px;
-  }
+.h2-num {
+  font-family: var(--mono);
+  font-size: 10px;
+  font-style: normal;
+  color: var(--muted2);
+  letter-spacing: 1.5px;
+  border: 1px solid var(--border);
+  padding: 2px 7px;
+  border-radius: 2px;
+  flex-shrink: 0;
+  margin-bottom: -2px;
+}
 
-  .project-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    margin-bottom: 8px;
-    gap: 12px;
-    flex-wrap: wrap;
-  }
+h2::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(to right, var(--border), transparent);
+  min-width: 20px;
+}
 
-  .project-name {
-    font-family: var(--serif);
-    font-size: 18px;
-    font-weight: bold;
-  }
+p {
+  font-size: 14px;
+  color: var(--text);
+  margin-bottom: 16px;
+  line-height: 1.8;
+}
 
-  .project-lang {
-    font-size: 11px;
-    color: var(--accent);
-    white-space: nowrap;
-    letter-spacing: 0.5px;
-  }
+/* ══════════════════════════════════════
+   WITTY ASIDE
+══════════════════════════════════════ */
+.witty-aside {
+  position: relative;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 14px;
+  color: var(--muted);
+  background: var(--surface);
+  border: 1px solid var(--border-lt);
+  border-left: 3px solid var(--accent);
+  padding: 16px 18px 16px 20px;
+  margin: 20px 0;
+  border-radius: 0 var(--r) var(--r) 0;
+  line-height: 1.65;
+}
 
-  .project-desc {
-    font-size: 13px;
-    color: var(--text);
-    margin-bottom: 12px;
-    padding-left: 16px;
-    border-left: 1px solid var(--border);
-  }
+.witty-aside::before {
+  content: '\201C';
+  position: absolute;
+  top: -10px; left: 12px;
+  font-family: var(--serif);
+  font-size: 52px;
+  line-height: 1;
+  color: var(--accent);
+  opacity: 0.15;
+  font-style: normal;
+}
 
-  .project-link {
-    font-size: 11px;
-    margin-left: 16px;
-  }
+/* ══════════════════════════════════════
+   ASCII ART WRAPPER
+══════════════════════════════════════ */
+.ascii-wrap {
+  background: var(--surface);
+  border: 1px solid var(--border-lt);
+  border-radius: var(--r);
+  padding: 12px 16px;
+  margin-bottom: 8px;
+  overflow: hidden;
+}
 
-  /* ── GITHUB STATS ── */
-  .gh-block {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    padding: 24px;
-    font-size: 12.5px;
-    box-shadow: 4px 4px 0px var(--border);
-  }
+.ascii_horse {
+  font-family: var(--mono);
+  font-size: 4px;
+  color: var(--muted2);
+  line-height: 0.5;
+  user-select: none;
+  white-space: pre;
+  opacity: 0.75;
+}
 
-  .gh-row {
-    display: flex;
-    justify-content: space-between;
-    padding: 6px 0;
-    border-bottom: 1px dotted #ccc;
-  }
+.ascii {
+  font-family: var(--mono);
+  font-size: 2px;
+  color: var(--muted2);
+  line-height: 0.7;
+  user-select: none;
+  white-space: pre;
+  opacity: 0.75;
+}
 
-  .gh-row:last-child { border-bottom: none; }
-  .gh-key { color: var(--muted); }
-  .gh-val { color: var(--text); font-weight: bold; }
+.ascii_me {
+  font-family: var(--mono);
+  font-size: 0.5px;
+  color: var(--muted2);
+  line-height: 0.8;
+  margin: 20px;
+  user-select: none;
+  white-space: pre;
+  opacity: 0.6;
+}
 
-  #gh-repos-list { margin-top: 24px; }
+/* ══════════════════════════════════════
+   STACK
+══════════════════════════════════════ */
+.stack-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
 
-  .gh-repo {
-    padding: 12px 0;
-    border-bottom: 1px dotted #ccc;
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-  }
+.stack-group {
+  background: var(--surface);
+  padding: 18px 20px;
+  border: 1px solid var(--border-lt);
+  border-top: 2px solid var(--accent);
+  border-radius: 0 0 var(--r) var(--r);
+  transition: box-shadow 0.22s, transform 0.22s;
+}
+.stack-group:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
 
-  .gh-repo:last-child { border-bottom: none; }
-  .gh-repo-name { font-size: 13.5px; font-weight: bold; }
-  .gh-repo-meta { font-size: 11px; color: var(--muted); }
+.stack-label {
+  font-size: 9px;
+  color: var(--accent);
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+  font-weight: 700;
+}
 
-  /* ── READING & BLOGS ── */
-  .list-item {
-    padding: 16px 0;
-    border-bottom: 1px dotted var(--border);
-    font-size: 13.5px;
-  }
+.stack-items {
+  font-size: 12.5px;
+  color: var(--text);
+  line-height: 1.8;
+}
 
-  .list-item:last-child { border-bottom: none; }
-  
-  .item-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    margin-bottom: 4px;
-  }
-  
-  .item-title { color: var(--text); font-weight: bold;}
-  .item-meta { font-size: 11px; color: var(--muted); text-align: right; }
-  .item-trivia { font-size: 12.5px; color: var(--muted); padding-left: 12px; border-left: 1px solid var(--border); margin-top: 4px;}
+/* ══════════════════════════════════════
+   PROJECTS
+══════════════════════════════════════ */
+.project {
+  background: var(--surface);
+  border: 1px solid var(--border-lt);
+  border-left: 3px solid var(--accent);
+  padding: 22px 26px;
+  margin-bottom: 14px;
+  border-radius: 0 var(--r) var(--r) 0;
+  transition: transform 0.22s, box-shadow 0.22s, border-left-color 0.22s;
+  position: relative;
+  overflow: hidden;
+}
 
-  /* ── CONTACT ── */
-  .contact-row {
-    display: flex;
-    gap: 16px;
-    margin-bottom: 12px;
-    font-size: 13.5px;
-    align-items: center;
-  }
+.project::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(130deg, rgba(36,80,200,0.04), transparent 55%);
+  pointer-events: none;
+}
 
-  .contact-type {
-    color: var(--muted);
-    font-size: 10px;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    width: 80px;
-    text-align: right;
-  }
+.project:hover {
+  transform: translateX(4px);
+  box-shadow: var(--shadow-md);
+  border-left-color: var(--accent-dk);
+}
 
-  /* ── FOOTER ── */
-  footer {
-    margin-top: 80px;
-    text-align: center;
-    font-size: 11px;
-    color: var(--muted);
-    letter-spacing: 1px;
-  }
+.project-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 10px;
+  gap: 12px;
+  flex-wrap: wrap;
+}
 
-  .loading { color: var(--muted); font-size: 12px; font-style: italic; animation: pulse 1.5s infinite; }
-  @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+.project-name {
+  font-family: var(--serif);
+  font-size: 19px;
+  font-weight: 500;
+  color: var(--text);
+  line-height: 1.2;
+}
+
+.lang-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-top: 2px;
+}
+
+.lang-tag {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: var(--accent);
+  background: var(--accent-lt);
+  border: 1px solid var(--border);
+  padding: 2px 8px;
+  border-radius: 2px;
+  white-space: nowrap;
+}
+
+.project-desc {
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.8;
+  margin-bottom: 12px;
+}
+
+.project-link { font-size: 11px; letter-spacing: 0.5px; }
+
+/* ══════════════════════════════════════
+   GITHUB
+══════════════════════════════════════ */
+.gh-block {
+  background: var(--surface);
+  border: 1px solid var(--border-lt);
+  border-top: 2px solid var(--accent);
+  padding: 24px 28px;
+  font-size: 12.5px;
+  border-radius: 0 0 var(--r) var(--r);
+  box-shadow: var(--shadow-sm);
+}
+
+.gh-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 7px 0;
+  border-bottom: 1px dotted var(--border);
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.gh-row:last-child { border-bottom: none; }
+.gh-key { color: var(--muted); font-size: 11px; letter-spacing: 1px; text-transform: uppercase; }
+.gh-val { color: var(--text); font-weight: 700; }
+
+#gh-repos-list { margin-top: 20px; }
+
+.repos-label {
+  font-size: 9px;
+  color: var(--muted2);
+  text-transform: uppercase;
+  letter-spacing: 2.5px;
+  margin-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 6px;
+  font-weight: 700;
+}
+
+.gh-repo {
+  padding: 10px 0;
+  border-bottom: 1px dotted var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+  flex-wrap: wrap;
+  transition: padding-left 0.18s;
+}
+.gh-repo:hover { padding-left: 6px; }
+.gh-repo:last-child { border-bottom: none; }
+.gh-repo-name { font-size: 13px; font-weight: 700; }
+.gh-repo-meta { font-size: 11px; color: var(--muted2); white-space: nowrap; }
+
+/* ══════════════════════════════════════
+   READING / WRITING
+══════════════════════════════════════ */
+.list-item {
+  padding: 16px 0;
+  border-bottom: 1px dotted var(--border);
+}
+.list-item:last-child { border-bottom: none; }
+
+.item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 5px;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.item-title { color: var(--text); font-weight: 700; font-size: 13.5px; }
+.item-meta  { font-size: 10.5px; color: var(--muted2); white-space: nowrap; letter-spacing: 0.5px; }
+
+.item-trivia {
+  font-size: 13px;
+  color: var(--muted);
+  padding-left: 14px;
+  border-left: 2px solid var(--border-lt);
+  margin-top: 5px;
+  font-style: italic;
+  font-family: var(--serif);
+  line-height: 1.65;
+}
+
+/* ══════════════════════════════════════
+   CONTACT
+══════════════════════════════════════ */
+.contact-grid { display: grid; gap: 10px; }
+
+.contact-row {
+  display: flex;
+  align-items: stretch;
+  border: 1px solid var(--border-lt);
+  border-radius: var(--r);
+  overflow: hidden;
+  transition: box-shadow 0.2s, transform 0.2s;
+  background: var(--surface);
+}
+.contact-row:hover {
+  box-shadow: var(--shadow-sm);
+  transform: translateX(4px);
+}
+
+.contact-type {
+  color: var(--accent);
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  font-weight: 700;
+  background: var(--accent-lt);
+  border-right: 1px solid var(--border);
+  padding: 10px 14px;
+  width: 88px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.contact-row a {
+  padding: 10px 16px;
+  display: flex;
+  align-items: center;
+  font-size: 13px;
+  color: var(--text);
+  border-bottom: none;
+  flex: 1;
+}
+.contact-row a:hover { color: var(--accent); }
+
+/* ══════════════════════════════════════
+   FOOTER
+══════════════════════════════════════ */
+footer {
+  margin-top: 80px;
+  padding-top: 28px;
+  border-top: 1px solid var(--border);
+  text-align: center;
+  font-size: 10.5px;
+  color: var(--muted2);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+footer::before {
+  content: '// EOF';
+  display: block;
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--border);
+  letter-spacing: 3px;
+  margin-bottom: 10px;
+}
+
+/* ══════════════════════════════════════
+   LOADING
+══════════════════════════════════════ */
+.loading {
+  color: var(--muted2);
+  font-size: 12px;
+  font-style: italic;
+  animation: pulse 1.4s infinite;
+}
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.35} }
+
+/* ══════════════════════════════════════
+   SCROLL REVEAL
+══════════════════════════════════════ */
+.reveal {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.55s ease, transform 0.55s ease;
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ══════════════════════════════════════
+   RESPONSIVE
+══════════════════════════════════════ */
+@media (max-width: 680px) {
+  .page-wrap { padding: calc(var(--nav-h) + 40px) 20px 72px; }
+  .site-nav { padding: 0 20px; }
+  .nav-links { gap: 14px; }
+  .nav-links a { font-size: 9px; letter-spacing: 1.2px; }
+  .stack-grid { grid-template-columns: 1fr; gap: 10px; }
+  .project { padding: 18px 18px; }
+  .gh-block { padding: 18px 18px; }
+  .item-header { flex-direction: column; align-items: flex-start; gap: 2px; }
+  .item-meta { text-align: left; }
+  h2::after { display: none; }
+  .ascii-wrap { display: none; }
+}
+
+@media (max-width: 480px) {
+  .page-wrap { padding: calc(var(--nav-h) + 28px) 16px 60px; }
+  .site-nav { padding: 0 16px; }
+  .nav-links a { display: none; }
+  .nav-links a:nth-child(-n+3) { display: block; }
+  .project-header { flex-direction: column; gap: 6px; }
+  .contact-type { width: 72px; font-size: 8px; padding: 10px 8px; }
+  .gh-block { padding: 14px; }
+  .gh-row { flex-direction: column; gap: 2px; }
+  .gh-repo { flex-direction: column; gap: 2px; }
+}
 </style>
 </head>
 <body>
 
-<header>
-<pre class="ascii_horse" style="margin-top: 0;">
+<!-- NAV -->
+<nav class="site-nav">
+  <div class="nav-logo">RC</div>
+  <div class="nav-links">
+    <a href="#about">about</a>
+    <a href="#stack">stack</a>
+    <a href="#projects">projects</a>
+    <a href="#github">github</a>
+    <a href="#reading">reading</a>
+    <a href="#contact">contact</a>
+  </div>
+</nav>
+
+<div class="page-wrap">
+
+<!-- HEADER -->
+<header class="reveal">
+  <div class="ascii-wrap">
+    <pre class="ascii_horse">
                                                      `T",.`-,
 
                                                      '8, :.
@@ -396,24 +755,30 @@
                         Y8bod.
 
                         `""""'
+    </pre>
+  </div>
 
-</pre>
-  <div class="name">Ronit Choudhury <span class="joke">(not a web dev lol)</span></div>
+  <div class="name">Ronit Choudhury<span class="name-cursor"></span></div>
+  <span class="joke">(not a web dev lol)</span>
+
   <div class="tagline">
     <span>CS · ECONOMICS · DESIGN</span>
-    <span style="color: var(--muted);">GUWAHATI, ASSAM</span>
+    <span>GUWAHATI, ASSAM</span>
   </div>
 </header>
 
-<section id="about">
+<!-- ABOUT -->
+<section id="about" class="reveal">
   <div class="section-intro">Hi, I'm Ronit. I spend most of my time bridging the gap between abstract theory and things that actually run.</div>
-  
+
   <p>
-    I'm currently a student doing an Integrated MSc in Software Development at Gauhati University, 
-    while concurrently reading Economics at IGNOU. My real interests lie in theoretical computer science: computability, type theory, complexity, and the mathematical structures beneath computation
+    I'm currently a student doing an Integrated MSc in Software Development at Gauhati University,
+    while concurrently reading Economics at IGNOU. My real interests lie in theoretical computer science:
+    computability, type theory, complexity, and the mathematical structures beneath computation.
   </p>
   <p>
-    I also have a formal background in Fine Arts, which subtly influences how I approach HCI and design. Also I like to read and watch good movies and anime!
+    I also have a formal background in Fine Arts, which subtly influences how I approach HCI and design.
+    Also I like to read and watch good movies and anime!
   </p>
 
   <div class="witty-aside">
@@ -422,106 +787,103 @@
   </div>
 </section>
 
-<section id="stack">
-  <h2>Stack</h2>
+<!-- STACK -->
+<section id="stack" class="reveal">
+  <h2><span class="h2-num">01</span> Stack</h2>
   <div class="section-intro">To translate those theories into reality, you need a solid toolkit. Here is mine...</div>
 
   <div class="stack-grid">
     <div class="stack-group">
       <div class="stack-label">Languages</div>
-      <div class="stack-items">C/C++, C#, Java, Python, Haskell, Fortran, SQL, HTML/CSS, R </div>
+      <div class="stack-items">C/C++, C#, Java, Python, Haskell, Fortran, SQL, HTML/CSS, R</div>
     </div>
-
     <div class="stack-group">
       <div class="stack-label">Frameworks & Tools</div>
       <div class="stack-items">ASP.NET Core, Avalonia UI, WebSockets, FastAPI, Redis, PostgreSQL, Podman, NumPy, Scikit-Learn</div>
     </div>
-
     <div class="stack-group">
       <div class="stack-label">Design</div>
-      <div class="stack-items">Figma, Inkscape, Adobe Illustrator, FreeCAD — WCAG-compliant accessible UI/UX </div>
+      <div class="stack-items">Figma, Inkscape, Adobe Illustrator, FreeCAD — WCAG-compliant accessible UI/UX</div>
     </div>
-
     <div class="stack-group">
       <div class="stack-label">Theoretical</div>
-      <div class="stack-items">Discrete Maths, Automata Theory, Algorithm Design, Probability, Descriptive Statistics, Micro/Macroeconomics </div>
+      <div class="stack-items">Discrete Maths, Automata Theory, Algorithm Design, Probability, Descriptive Statistics, Micro/Macroeconomics</div>
     </div>
   </div>
 </section>
 
-<section id="projects">
-  <h2>Projects</h2>
+<!-- PROJECTS -->
+<section id="projects" class="reveal">
+  <h2><span class="h2-num">02</span> Projects</h2>
   <div class="section-intro">Theory is great, but eventually, it has to compile. Here are a few systems I've built...</div>
 
   <div class="project">
     <div class="project-header">
       <span class="project-name">OmniBus</span>
-      <span class="project-lang">Python · FastAPI · Redis · PostgreSQL</span>
+      <div class="lang-tags">
+        <span class="lang-tag">Python</span>
+        <span class="lang-tag">FastAPI</span>
+        <span class="lang-tag">Redis</span>
+        <span class="lang-tag">PostgreSQL</span>
+      </div>
     </div>
-    <div class="project-desc">
-      Real-time bus tracking system. GPS from a driver app, live WebSocket updates to a student interface, and Redis pub/sub for location propagation. Co-architected the ML-based ETA prediction.
-    </div>
+    <div class="project-desc">Real-time bus tracking system. GPS from a driver app, live WebSocket updates to a student interface, and Redis pub/sub for location propagation. Co-architected the ML-based ETA prediction.</div>
     <a class="project-link" href="https://github.com/orgs/The3AMOrg/repositories" target="_blank">github.com/The3AMOrg →</a>
   </div>
 
   <div class="project">
     <div class="project-header">
       <span class="project-name">Dasam — FSM Simulator</span>
-      <span class="project-lang">C# · Avalonia UI</span>
-       
-    </div>
-    <div class="project-desc">
-      Cross-platform finite state machine simulator with visual state tracing, real-time transition logic, and an accessibility-first GUI. Because state machines shouldn't just be for the sighted.
+      <div class="lang-tags">
+        <span class="lang-tag">C#</span>
+        <span class="lang-tag">Avalonia UI</span>
       </div>
-    <a class="project-link" href="https://github.com/nonQualities/Dasaam" target="_blank">github.com/nonQualities/Dasaam →</a>
-  </div>
     </div>
-    
+    <div class="project-desc">Cross-platform finite state machine simulator with visual state tracing, real-time transition logic, and an accessibility-first GUI. Because state machines shouldn't just be for the sighted.</div>
+    <a class="project-link" href="https://github.com/nonQualities/Dasaam" target="_blank">github.com/nonQualities/Dasaam →</a>
   </div>
 
   <div class="project">
     <div class="project-header">
       <span class="project-name">Fluid Simulation Engine</span>
-      <span class="project-lang">C++</span>
-    </div>
-    <div class="project-desc">
-      2D Lattice Boltzmann Method based mesoscopic fluid dynamics. Optimised memory layout and computation loops for high frame-rate interactive rendering. Basically, making water do math really fast.
+      <div class="lang-tags">
+        <span class="lang-tag">C++</span>
       </div>
-    <a class="project-link" href="https://github.com/nonQualities/vayunicus" target="_blank">github.com/nonQualities/vayunicus →</a>
-  </div>
     </div>
+    <div class="project-desc">2D Lattice Boltzmann Method based mesoscopic fluid dynamics. Optimised memory layout and computation loops for high frame-rate interactive rendering. Basically, making water do math really fast.</div>
+    <a class="project-link" href="https://github.com/nonQualities/vayunicus" target="_blank">github.com/nonQualities/vayunicus →</a>
   </div>
 
   <div class="project">
     <div class="project-header">
       <span class="project-name">DSL Prototype & Evaluator</span>
-      <span class="project-lang">Haskell</span>
-    </div>
-    <div class="project-desc">
-      Domain-specific language with a custom parser and evaluator built using monadic composition and type-safe functional paradigms. 
+      <div class="lang-tags">
+        <span class="lang-tag">Haskell</span>
       </div>
-    <a class="project-link" href="https://github.com/nonQualities/ExpressionEval" target="_blank">github.com/nonQualities/ExpressionEval →</a>
-  </div>
     </div>
+    <div class="project-desc">Domain-specific language with a custom parser and evaluator built using monadic composition and type-safe functional paradigms.</div>
+    <a class="project-link" href="https://github.com/nonQualities/ExpressionEval" target="_blank">github.com/nonQualities/ExpressionEval →</a>
   </div>
 
   <div class="project">
     <div class="project-header">
       <span class="project-name">FSynth — ADSR Synthesizer</span>
-      <span class="project-lang">Fortran</span>
+      <div class="lang-tags">
+        <span class="lang-tag">Fortran</span>
+      </div>
     </div>
-    <div class="project-desc">
-      Low-level audio engine implementing ADSR envelope modelling and real-time waveform generation. Yes, Fortran. No, I am not from the 1970s.
-    </div>
+    <div class="project-desc">Low-level audio engine implementing ADSR envelope modelling and real-time waveform generation. Yes, Fortran. No, I am not from the 1970s.</div>
     <a class="project-link" href="https://github.com/nonQualities/synth" target="_blank">github.com/nonQualities/synth →</a>
   </div>
 </section>
 
-<section id="github">
-  <h2>GitHub Activity</h2>
+<!-- GITHUB -->
+<section id="github" class="reveal">
+  <h2><span class="h2-num">03</span> GitHub Activity</h2>
   <div class="section-intro">Want to see the source? Here is where the code actually lives (and occasionally breaks)...</div>
 
-<pre class="ascii_horse">
+  <div class="ascii-wrap" style="margin-bottom: 20px;">
+    <pre class="ascii_horse">
            ..
           =-=.
           =-==.              .:---:
@@ -550,24 +912,26 @@
    .................................::::.
     ...................................
 ------------------------------------------------
-
-</pre>
+    </pre>
+  </div>
 
   <div class="gh-block">
     <div id="gh-profile-stats" class="loading">pinging api.github.com...</div>
     <div id="gh-repos-list"></div>
   </div>
 
-  <div class="witty-aside" style="margin-top: 16px;">
+  <div class="witty-aside" style="margin-top: 18px;">
     Code quality may vary from "mathematically provable" to "it compiled at 3 AM."
   </div>
 </section>
 
-<section id="reading">
-  <h2>Currently Reading</h2>
+<!-- READING -->
+<section id="reading" class="reveal">
+  <h2><span class="h2-num">04</span> Currently Reading</h2>
   <div class="section-intro">When I step away from the screen, I'm usually parsing through these...</div>
 
-<pre class="ascii" style="margin-bottom: 24px;">
+  <div class="ascii-wrap" style="margin-bottom: 20px;">
+    <pre class="ascii">
                            __
 
           HH
@@ -591,18 +955,16 @@ BBB | C | HH 838 %%%% EEE ## AAAAA ,0X0',zZZZ"HH$HHHHHHHDDHH$HH
 === |<<<| HH 838 //// EEE ## AAAAA.0X0;zZZZ"  EE$EEEEEEEDDEE$EE
 
 BBB |___| HH 838 %%%% EEE ## AAAAA'"0' "Z"    HH$HHHHHHHDDHH$HH
-
-
-</pre>
+    </pre>
+  </div>
 
   <div class="list-item">
     <div class="item-header">
       <span class="item-title">War and Peace</span>
       <span class="item-meta">Leo Tolstoy</span>
     </div>
-    <div class="item-trivia">Tolstoy’s casual 1,200-page reminder that history is chaotic, nobody is actually in charge, and we're all just guessing.</div>
+    <div class="item-trivia">Tolstoy's casual 1,200-page reminder that history is chaotic, nobody is actually in charge, and we're all just guessing.</div>
   </div>
-  
   <div class="list-item">
     <div class="item-header">
       <span class="item-title">Discrete Mathematical Structures with Applications to CS</span>
@@ -610,7 +972,6 @@ BBB |___| HH 838 %%%% EEE ## AAAAA'"0' "Z"    HH$HHHHHHHDDHH$HH
     </div>
     <div class="item-trivia">Because trees aren't just for climbing. Honestly, this is the foundation of almost everything else on this page.</div>
   </div>
-  
   <div class="list-item">
     <div class="item-header">
       <span class="item-title">Foundations of Cryptography</span>
@@ -618,21 +979,22 @@ BBB |___| HH 838 %%%% EEE ## AAAAA'"0' "Z"    HH$HHHHHHHDDHH$HH
     </div>
     <div class="item-trivia">A rigorous deep dive into keeping secrets safe by exploiting the fact that factoring very large prime numbers is really, really annoying.</div>
   </div>
-  
   <div class="list-item">
     <div class="item-header">
       <span class="item-title">Ghost in the Wires</span>
       <span class="item-meta">Kevin Mitnick</span>
     </div>
-    <div class="item-trivia">Mitnick’s masterclass proving that no matter how good your encryption is, humans will always be the weakest link in any security system.</div>
+    <div class="item-trivia">Mitnick's masterclass proving that no matter how good your encryption is, humans will always be the weakest link in any security system.</div>
   </div>
 </section>
 
-<section id="blogs">
-  <h2>Writing</h2>
+<!-- WRITING -->
+<section id="writing" class="reveal">
+  <h2><span class="h2-num">05</span> Writing</h2>
   <div class="section-intro">And when those reading sessions spiral into deep rabbit holes, my notes get completely out of hand. So, here they are on Medium...</div>
 
-<pre class="ascii">
+  <div class="ascii-wrap" style="margin-bottom: 20px;">
+    <pre class="ascii">
                  ?
             ____"_                   |   |
            /"  _)))                  |\_/|______,
@@ -656,10 +1018,10 @@ _\\\__/   \    /          _\\\__/    \    /
           S__     S__              S__      S__
          /___\   /___\   b'ger    /___\    /___\
 ------------------------------------------------
+    </pre>
+  </div>
 
-</pre>
-
-  <div class="list-item" style="border: none;">
+  <div class="list-item">
     <div class="item-header">
       <a class="item-title" href="https://medium.com/@ronitchoudhury965/i-built-a-csma-simulator-and-accidentally-read-a-1975-paper-about-it-66dfe56c35ea" target="_blank">
         I Built a CSMA Simulator and Accidentally Read a 1975 Paper About It
@@ -668,7 +1030,7 @@ _\\\__/   \    /          _\\\__/    \    /
     </div>
   </div>
 
-  <div class="list-item" style="border: none;">
+  <div class="list-item" style="border-bottom: none;">
     <div class="item-header">
       <a class="item-title" href="https://medium.com/@ronitchoudhury965/hopefully-a-hopeful-piece-of-literature-e0299bbbc7d0" target="_blank">
         Hopefully, A Hopeful Piece of Literature
@@ -677,16 +1039,18 @@ _\\\__/   \    /          _\\\__/    \    /
     </div>
   </div>
 
-  <p style="margin-top: 16px; font-size: 12px; border-top: 1px dotted var(--border); padding-top: 16px;">
+  <p style="margin-top: 18px; font-size: 12px; border-top: 1px dotted var(--border); padding-top: 16px;">
     <a href="https://medium.com/@ronitchoudhury965" target="_blank">→ read all on Medium</a>
   </p>
 </section>
 
-<section id="contact">
-  <h2>Ping Me</h2>
+<!-- CONTACT -->
+<section id="contact" class="reveal">
+  <h2><span class="h2-num">06</span> Ping Me</h2>
   <div class="section-intro">If you want to talk about any of this or anything else, reach out...</div>
 
-<pre class="ascii_me">
+  <div class="ascii-wrap" style="margin-bottom: 24px; overflow: hidden;">
+    <pre class="ascii_me">
                                                                                                     
                                                                                                     
    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%##########   
@@ -747,102 +1111,104 @@ _\\\__/   \    /          _\\\__/    \    /
    ::::::---=---=----::::....:.............::.........::-:.....---..::--@@@@@@@@@@@@@@@@@@@@@@@@@   
    :::::::--===---::::::::...:........:.....:..........:::.....::=-:::-:@@@@@@@@@@@@@@@@@@@@@@@@@   
    :::::::::-==---::-::-:::..:::......:.....::...:..:..:--......=+#**=--@@@@@@@@@@@@@@@@@@@@@@@@@   
-                                                                                                    
-  
-</pre>
+    </pre>
+  </div>
 
-
-  <div class="contact-row">
-    <span class="contact-type">Proton</span>
-    <a href="mailto:choudhury.ronit@proton.me">choudhury.ronit@proton.me</a>
-  </div>
-  <div class="contact-row">
-    <span class="contact-type">Gmail</span>
-    <a href="mailto:ronitchoudhury965@gmail.com">ronitchoudhury965@gmail.com</a>
-  </div>
-  <div class="contact-row">
-    <span class="contact-type">GitHub</span>
-    <a href="https://github.com/nonQualities" target="_blank">nonQualities</a>
-  </div>
-  <div class="contact-row">
-    <span class="contact-type">LinkedIn</span>
-    <a href="https://www.linkedin.com/in/ronit-choudhury-2672ab404/" target="_blank">Ronit Choudhury</a>
+  <div class="contact-grid">
+    <div class="contact-row">
+      <span class="contact-type">Proton</span>
+      <a href="mailto:choudhury.ronit@proton.me">choudhury.ronit@proton.me</a>
+    </div>
+    <div class="contact-row">
+      <span class="contact-type">Gmail</span>
+      <a href="mailto:ronitchoudhury965@gmail.com">ronitchoudhury965@gmail.com</a>
+    </div>
+    <div class="contact-row">
+      <span class="contact-type">GitHub</span>
+      <a href="https://github.com/nonQualities" target="_blank">nonQualities</a>
+    </div>
+    <div class="contact-row">
+      <span class="contact-type">LinkedIn</span>
+      <a href="https://www.linkedin.com/in/ronit-choudhury-2672ab404/" target="_blank">Ronit Choudhury</a>
+    </div>
   </div>
 </section>
 
-<footer>
-  ~ END OF FILE ~<br><br>
+<footer class="reveal">
   © 2026 Ronit Choudhury
 </footer>
 
+</div><!-- /.page-wrap -->
+
 <script>
-  document.addEventListener('DOMContentLoaded', () => {
-    async function loadGitHub() {
-      const statsEl = document.getElementById('gh-profile-stats');
-      const reposEl = document.getElementById('gh-repos-list');
+/* SCROLL REVEAL */
+const reveals = document.querySelectorAll('.reveal');
+const io = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+      io.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.07 });
+reveals.forEach(el => io.observe(el));
+document.querySelector('header').classList.add('visible');
 
-      // Constructive addition: Guard clause to prevent execution if elements are missing
-      if (!statsEl || !reposEl) {
-        console.warn('GitHub stats DOM elements not found.');
-        return;
-      }
+/* GITHUB */
+document.addEventListener('DOMContentLoaded', async () => {
+  const statsEl = document.getElementById('gh-profile-stats');
+  const reposEl = document.getElementById('gh-repos-list');
+  if (!statsEl || !reposEl) return;
 
-      try {
-        const [userRes, reposRes] = await Promise.all([
-          fetch('https://api.github.com/users/nonQualities'),
-          fetch('https://api.github.com/users/nonQualities/repos?sort=updated&per_page=10')
-        ]);
+  try {
+    const [userRes, reposRes] = await Promise.all([
+      fetch('https://api.github.com/users/nonQualities'),
+      fetch('https://api.github.com/users/nonQualities/repos?sort=updated&per_page=10')
+    ]);
 
-        if (!userRes.ok || !reposRes.ok) {
-            // Check specifically for rate limiting (HTTP 403)
-            if (userRes.status === 403) {
-                throw new Error('GitHub API Rate Limit Exceeded');
-            }
-            throw new Error('API connection failed');
-        }
-
-        const user = await userRes.json();
-        const repos = await reposRes.json();
-
-        statsEl.innerHTML = `
-          <div class="gh-row">
-            <span class="gh-key">Entity</span>
-            <span class="gh-val">@${user.login}</span>
-          </div>
-          <div class="gh-row">
-            <span class="gh-key">Public Repos</span>
-            <span class="gh-val">${user.public_repos}</span>
-          </div>
-          <div class="gh-row">
-            <span class="gh-key">Followers</span>
-            <span class="gh-val">${user.followers}</span>
-          </div>
-        `;
-
-        if (repos.length > 0) {
-          const publicRepos = repos.filter(r => !r.fork);
-          reposEl.innerHTML = '<div style="font-size:10px; color:var(--muted); text-transform:uppercase; letter-spacing:2px; margin: 24px 0 12px; border-bottom: 1px dotted var(--border); padding-bottom: 4px;">Recent Transmissions</div>' +
-            publicRepos.slice(0, 5).map(r => `
-              <div class="gh-repo">
-                <span class="gh-repo-name">
-                  <a href="${r.html_url}" target="_blank">${r.name}</a>
-                </span>
-                <span class="gh-repo-meta">${r.language || '—'} · ★ ${r.stargazers_count}</span>
-              </div>
-            `).join('');
-        }
-
-      } catch (e) {
-        console.error("Transmission Interrupted: ", e.message);
-        statsEl.innerHTML = `<span style="font-size:12px; color:var(--muted);">
-          Could not establish connection to GitHub API. (${e.message})<br>
-          <a href="https://github.com/nonQualities" target="_blank" style="margin-top: 8px; display: inline-block;">→ override & visit profile manually</a>
-        </span>`;
-      }
+    if (!userRes.ok || !reposRes.ok) {
+      if (userRes.status === 403) throw new Error('GitHub API Rate Limit Exceeded');
+      throw new Error('API connection failed');
     }
 
-    loadGitHub();
-  });
+    const user  = await userRes.json();
+    const repos = await reposRes.json();
+
+    statsEl.innerHTML = `
+      <div class="gh-row">
+        <span class="gh-key">Entity</span>
+        <span class="gh-val">@${user.login}</span>
+      </div>
+      <div class="gh-row">
+        <span class="gh-key">Public Repos</span>
+        <span class="gh-val">${user.public_repos}</span>
+      </div>
+      <div class="gh-row">
+        <span class="gh-key">Followers</span>
+        <span class="gh-val">${user.followers}</span>
+      </div>
+    `;
+
+    const publicRepos = repos.filter(r => !r.fork);
+    if (publicRepos.length > 0) {
+      reposEl.innerHTML =
+        '<div class="repos-label">Recent Transmissions</div>' +
+        publicRepos.slice(0, 5).map(r => `
+          <div class="gh-repo">
+            <span class="gh-repo-name"><a href="${r.html_url}" target="_blank">${r.name}</a></span>
+            <span class="gh-repo-meta">${r.language || '—'} · ★ ${r.stargazers_count}</span>
+          </div>
+        `).join('');
+    }
+
+  } catch (e) {
+    console.error('Transmission Interrupted:', e.message);
+    statsEl.innerHTML = `<span style="font-size:12px;color:var(--muted);">
+      Could not reach GitHub API. (${e.message})<br>
+      <a href="https://github.com/nonQualities" target="_blank" style="margin-top:8px;display:inline-block;">→ override &amp; visit profile manually</a>
+    </span>`;
+  }
+});
 </script>
 
 </body>
